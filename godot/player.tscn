@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cq5nyg83qgbrp"]
+
+[ext_resource type="PackedScene" uid="uid://drybop6cnboh0" path="res://squash_the_creeps_start_1.1.0/art/player.glb" id="1_m5rre"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3pitv"]
+radius = 0.527942
+
+[node name="Player" type="Player"]
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="Character" parent="Pivot" instance=ExtResource("1_m5rre")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -0.00350115, 0.706223, -0.016127)
+shape = SubResource("SphereShape3D_3pitv")
