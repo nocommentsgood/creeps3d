@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://eorayu3qo8i8"]
+
+[ext_resource type="PackedScene" uid="uid://c1pyvelngqjwe" path="res://squash_the_creeps_start_1.1.0/art/mob.glb" id="1_f0qax"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2xs5j"]
+size = Vector3(2.24493, 1.02104, 2.39258)
+
+[node name="Mob" type="Enemy"]
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="Character" parent="Pivot" instance=ExtResource("1_f0qax")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00924683, 0.248974, -0.12317)
+shape = SubResource("BoxShape3D_2xs5j")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="."]
+transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1.7, 0, 0.501353, 0.305515)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="on_screen_exited"]

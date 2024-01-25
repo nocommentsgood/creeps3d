@@ -1,4 +1,5 @@
 mod enemy;
+mod main_scene;
 mod player;
 
 use godot::prelude::*;

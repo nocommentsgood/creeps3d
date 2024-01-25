@@ -5,7 +5,7 @@ use godot::{
 
 #[derive(GodotClass)]
 #[class(base=CharacterBody3D)]
-struct Player {
+pub struct Player {
     speed: real,
     fall_acceleration: real,
     target_velocity: Vector3,

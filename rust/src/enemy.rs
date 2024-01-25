@@ -1,14 +1,14 @@
 use std::ops::Neg;
 
 use godot::{
-    engine::{CharacterBody3D, ICharacterBody3D},
+    engine::{CharacterBody3D, ICharacterBody3D, VisibleOnScreenNotifier3D},
     prelude::*,
 };
-use rand::{seq::SliceRandom, Rng};
+use rand::Rng;
 
 #[derive(GodotClass)]
 #[class(base=CharacterBody3D)]
-struct Enemy {
+pub struct Enemy {
     min_speed: real,
     max_speed: real,
 
@@ -34,7 +34,7 @@ impl ICharacterBody3D for Enemy {
 #[godot_api]
 impl Enemy {
     #[func]
-    fn initialize(&mut self, start_position: Vector3, player_position: Vector3) {
+    pub fn initialize(&mut self, start_position: Vector3, player_position: Vector3) {
         let mut rng = rand::thread_rng();
         let p_pi = std::f32::consts::PI / 4.0;
         let n_pi = std::f32::consts::PI.neg() / 4.0;
@@ -49,5 +49,13 @@ impl Enemy {
         let rotation = self.base().get_rotation();
         self.base_mut()
             .set_velocity(velocity.rotated(Vector3::UP, rotation.y));
+    }
+
+    #[func]
+    fn on_screen_exited(&mut self) {
+        let mut notifier = self
+            .base_mut()
+            .get_node_as::<VisibleOnScreenNotifier3D>("VisibleOnScreenNotifier3D");
+        notifier.queue_free();
     }
 }
