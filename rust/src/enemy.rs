@@ -33,6 +33,9 @@ impl ICharacterBody3D for Enemy {
 
 #[godot_api]
 impl Enemy {
+    #[signal]
+    fn squashed();
+
     #[func]
     pub fn initialize(&mut self, start_position: Vector3, player_position: Vector3) {
         let mut rng = rand::thread_rng();
@@ -57,5 +60,11 @@ impl Enemy {
             .base_mut()
             .get_node_as::<VisibleOnScreenNotifier3D>("VisibleOnScreenNotifier3D");
         notifier.queue_free();
+    }
+
+    #[func]
+    fn squash(&mut self) {
+        self.base().emit_signal("squashed".into(), &[]);
+        self.base_mut().queue_free();
     }
 }

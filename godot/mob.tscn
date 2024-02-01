@@ -5,7 +5,9 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_2xs5j"]
 size = Vector3(2.24493, 1.02104, 2.39258)
 
-[node name="Mob" type="Enemy"]
+[node name="Mob" type="Enemy" groups=["mob"]]
+collision_layer = 2
+collision_mask = 0
 
 [node name="Pivot" type="Node3D" parent="."]
 

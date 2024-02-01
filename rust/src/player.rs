@@ -1,5 +1,5 @@
 use godot::{
-    engine::{CharacterBody3D, ICharacterBody3D},
+    engine::{CharacterBody3D, CollisionShape3D, ICharacterBody3D, KinematicCollision3D},
     prelude::*,
 };
 
@@ -8,6 +8,8 @@ use godot::{
 pub struct Player {
     speed: real,
     fall_acceleration: real,
+    jump_impulse: real,
+    bounce_impulse: real,
     target_velocity: Vector3,
 
     #[base]
@@ -20,6 +22,8 @@ impl ICharacterBody3D for Player {
         Player {
             speed: 14.0,
             fall_acceleration: 75.0,
+            jump_impulse: 20.0,
+            bounce_impulse: 16.0,
             target_velocity: Vector3::ZERO,
             base,
         }
@@ -48,6 +52,30 @@ impl ICharacterBody3D for Player {
             let direction = direction.normalized();
 
             pivot.look_at(position + direction);
+        }
+
+        if self.base().is_on_floor() && input.is_action_just_pressed("jump".into()) {
+            self.target_velocity.y = self.jump_impulse;
+        }
+
+        let index = self.base().get_slide_collision_count();
+        for i in 0..index {
+            let c = self
+                .base()
+                .get_node_as::<CollisionShape3D>("CollisionShape3D");
+
+            let coll = self.base_mut().get_slide_collision(index).unwrap();
+            let col = coll.get_collider().unwrap();
+            let col = col.cast::<Node3D>();
+            if col.is_in_group("mob".into()) {
+                let mob = coll.get_collider().unwrap();
+
+                if Vector3::UP.dot(coll.get_normal()) > 0.1 {
+                    mob.squash();
+                    self.target_velocity.y = self.bounce_impulse;
+                    break;
+                }
+            }
         }
 
         let direction = direction.normalized();

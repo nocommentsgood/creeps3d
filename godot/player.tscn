@@ -6,6 +6,7 @@
 radius = 0.527942
 
 [node name="Player" type="Player"]
+collision_mask = 6
 
 [node name="Pivot" type="Node3D" parent="."]
 
