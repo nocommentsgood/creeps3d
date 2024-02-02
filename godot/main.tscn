@@ -85,4 +85,5 @@ autostart = true
 [node name="Mob" parent="." instance=ExtResource("2_xim5j")]
 visible = false
 
+[connection signal="hit" from="Player" to="." method="on_player_hit"]
 [connection signal="timeout" from="MobTimer" to="." method="on_mob_timer_timeout"]

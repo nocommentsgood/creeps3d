@@ -97,4 +97,19 @@ impl ICharacterBody3D for Player {
     }
 }
 
-impl Player {}
+#[godot_api]
+impl Player {
+    #[signal]
+    fn hit();
+
+    #[func]
+    fn die(&mut self) {
+        self.base_mut().emit_signal("hit".into(), &[]);
+        self.base_mut().queue_free();
+    }
+
+    #[func]
+    fn on_mob_detector_entered(&mut self) {
+        self.die();
+    }
+}

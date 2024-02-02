@@ -1,6 +1,6 @@
 use crate::enemy::Enemy;
 use godot::{
-    engine::{CharacterBody3D, PathFollow3D},
+    engine::{CharacterBody3D, PathFollow3D, Timer},
     prelude::*,
 };
 use rand::Rng;
@@ -33,6 +33,12 @@ impl Main {
         }
 
         self.base_mut().add_child(mob_scene.clone().upcast());
+    }
+
+    #[func]
+    fn on_player_hit(&mut self) {
+        let mut timer = self.base().get_node_as::<Timer>("MobTimer");
+        timer.stop();
     }
 }
 
