@@ -10,7 +10,6 @@ use rand::Rng;
 struct Main {
     mob_scene: Gd<PackedScene>,
 
-    #[base]
     base: Base<Node>,
 }
 

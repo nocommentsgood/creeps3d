@@ -12,7 +12,6 @@ pub struct Enemy {
     min_speed: real,
     max_speed: real,
 
-    #[base]
     base: Base<CharacterBody3D>,
 }
 
@@ -26,7 +25,7 @@ impl ICharacterBody3D for Enemy {
         }
     }
 
-    fn physics_process(&mut self, delta: f64) {
+    fn physics_process(&mut self, _delta: f64) {
         self.base_mut().move_and_slide();
     }
 }
@@ -63,8 +62,8 @@ impl Enemy {
     }
 
     #[func]
-    fn squash(&mut self) {
-        self.base().emit_signal("squashed".into(), &[]);
+    pub fn squash(&mut self) {
+        self.base_mut().emit_signal("squashed".into(), &[]);
         self.base_mut().queue_free();
     }
 }
