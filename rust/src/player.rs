@@ -1,5 +1,5 @@
 use godot::{
-    engine::{CharacterBody3D, CollisionShape3D, ICharacterBody3D, KinematicCollision3D},
+    engine::{CharacterBody3D, ICharacterBody3D},
     prelude::*,
 };
 
@@ -12,7 +12,6 @@ pub struct Player {
     bounce_impulse: real,
     target_velocity: Vector3,
 
-    #[base]
     base: Base<CharacterBody3D>,
 }
 
@@ -46,6 +45,7 @@ impl ICharacterBody3D for Player {
             direction += Vector3::BACK;
         }
 
+        // prevent moving faster when moving diagonally
         if direction != Vector3::ZERO {
             let mut pivot = self.base().get_node_as::<Node3D>("Pivot");
             let position = self.base().get_position();
@@ -54,36 +54,41 @@ impl ICharacterBody3D for Player {
             pivot.look_at(position + direction);
         }
 
+        // moving
         if self.base().is_on_floor() && input.is_action_just_pressed("jump".into()) {
             self.target_velocity.y = self.jump_impulse;
         }
 
-        let index = self.base().get_slide_collision_count();
-        for i in 0..index {
-            let c = self
-                .base()
-                .get_node_as::<CollisionShape3D>("CollisionShape3D");
-
-            let coll = self.base_mut().get_slide_collision(index).unwrap();
-            let col = coll.get_collider().unwrap();
-            let col = col.cast::<Node3D>();
-            if col.is_in_group("mob".into()) {
-                let mob = coll.get_collider().unwrap();
-
-                if Vector3::UP.dot(coll.get_normal()) > 0.1 {
-                    mob.squash();
-                    self.target_velocity.y = self.bounce_impulse;
-                    break;
-                }
-            }
-        }
-
+        // vertical moving
         let direction = direction.normalized();
         self.target_velocity.x = direction.x * self.speed;
         self.target_velocity.z = direction.z * self.speed;
 
+        // jumping
         if !self.base().is_on_floor() {
             self.target_velocity.y -= self.fall_acceleration * delta as f32;
+        }
+
+        // squashing
+        let count = self.base().get_slide_collision_count();
+        for i in 0..count {
+            let collision = self.base_mut().get_slide_collision(i);
+
+            // gross
+            if let Some(kin_3d) = collision {
+                let collider = kin_3d.get_collider();
+                if let Some(col) = collider {
+                    let col: Gd<Node> = col.cast();
+                    if col.is_in_group("mob".into()) {
+                        let mut mob: Gd<crate::enemy::Enemy> = col.cast();
+                        if Vector3::UP.dot(kin_3d.get_normal()) > 0.1 {
+                            mob.bind_mut().squash();
+                            self.target_velocity.y = self.bounce_impulse;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         let v = self.target_velocity;
