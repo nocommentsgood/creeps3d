@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cex57jih4xcre"]
+[gd_scene load_steps=10 format=3 uid="uid://cex57jih4xcre"]
 
 [ext_resource type="PackedScene" uid="uid://cq5nyg83qgbrp" path="res://player.tscn" id="1_mv00u"]
 [ext_resource type="PackedScene" uid="uid://eorayu3qo8i8" path="res://mob.tscn" id="2_xim5j"]
+[ext_resource type="FontFile" uid="uid://ck5adsx2f3k6j" path="res://fonts/Montserrat-Medium.ttf" id="3_ludln"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x4j3s"]
 size = Vector3(60, 2, 60)
@@ -20,6 +21,10 @@ _data = {
 "tilts": PackedFloat32Array(0, 0, 0, 0)
 }
 point_count = 4
+
+[sub_resource type="Theme" id="Theme_5ud4e"]
+default_font = ExtResource("3_ludln")
+default_font_size = 22
 
 [node name="Main" type="Main"]
 
@@ -41,6 +46,7 @@ light_energy = 0.805
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_mv00u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.428877, 0)
 
 [node name="CameraPivot" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
@@ -84,6 +90,47 @@ autostart = true
 
 [node name="Mob" parent="." instance=ExtResource("2_xim5j")]
 visible = false
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_5ud4e")
+
+[node name="ScoreLabel" type="Score" parent="UserInterface"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 23.0
+offset_right = 81.0
+offset_bottom = 46.0
+text = "Score: 0"
+
+[node name="Retry" type="ColorRect" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.392157)
+
+[node name="Score" type="Score" parent="UserInterface/Retry"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -108.5
+offset_top = -14.0
+offset_right = 108.5
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press <CR> to Retry"
 
 [connection signal="hit" from="Player" to="." method="on_player_hit"]
 [connection signal="timeout" from="MobTimer" to="." method="on_mob_timer_timeout"]

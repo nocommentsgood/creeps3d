@@ -1,1 +1,1 @@
-/home/conor/godot/creeps3d/rust/target/debug/libtemplate.so: /home/conor/godot/creeps3d/rust/src/enemy.rs /home/conor/godot/creeps3d/rust/src/lib.rs /home/conor/godot/creeps3d/rust/src/main_scene.rs /home/conor/godot/creeps3d/rust/src/player.rs
+/home/conor/godot/creeps3d/rust/target/debug/libtemplate.so: /home/conor/godot/creeps3d/rust/src/enemy.rs /home/conor/godot/creeps3d/rust/src/lib.rs /home/conor/godot/creeps3d/rust/src/main_scene.rs /home/conor/godot/creeps3d/rust/src/player.rs /home/conor/godot/creeps3d/rust/src/score.rs

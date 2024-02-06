@@ -1,6 +1,7 @@
 mod enemy;
 mod main_scene;
 mod player;
+mod score;
 
 use godot::prelude::*;
 

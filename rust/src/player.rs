@@ -1,5 +1,5 @@
 use godot::{
-    engine::{CharacterBody3D, ICharacterBody3D},
+    engine::{AnimationPlayer, CharacterBody3D, ICharacterBody3D},
     prelude::*,
 };
 
@@ -50,8 +50,17 @@ impl ICharacterBody3D for Player {
             let mut pivot = self.base().get_node_as::<Node3D>("Pivot");
             let position = self.base().get_position();
             let direction = direction.normalized();
+            let mut animation = self
+                .base_mut()
+                .get_node_as::<AnimationPlayer>("AnimationPlayer");
 
             pivot.look_at(position + direction);
+            animation.set_speed_scale(4.0);
+        } else {
+            let mut animation = self
+                .base_mut()
+                .get_node_as::<AnimationPlayer>("AnimationPlayer");
+            animation.set_speed_scale(1.0);
         }
 
         // moving
@@ -75,6 +84,7 @@ impl ICharacterBody3D for Player {
             let collision = self.base_mut().get_slide_collision(i);
 
             // gross
+            // TODO: Refactor this
             if let Some(kin_3d) = collision {
                 let collider = kin_3d.get_collider();
                 if let Some(col) = collider {
@@ -94,6 +104,12 @@ impl ICharacterBody3D for Player {
         let v = self.target_velocity;
         self.base_mut().set_velocity(v);
         self.base_mut().move_and_slide();
+
+        let mut pivot = self.base_mut().get_node_as::<Node3D>("Pivot");
+        // pivot.rotate_x(std::f32::consts::PI / 6.0 * self.target_velocity.y / self.jump_impulse);
+        let mut pivot_roation = pivot.get_rotation();
+        pivot_roation.x = std::f32::consts::PI / 6.0 * self.target_velocity.y / self.jump_impulse;
+        pivot.set_rotation(pivot_roation);
     }
 }
 

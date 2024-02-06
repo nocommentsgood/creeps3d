@@ -33,7 +33,7 @@ impl ICharacterBody3D for Enemy {
 #[godot_api]
 impl Enemy {
     #[signal]
-    fn squashed();
+    pub fn squashed();
 
     #[func]
     pub fn initialize(&mut self, start_position: Vector3, player_position: Vector3) {
